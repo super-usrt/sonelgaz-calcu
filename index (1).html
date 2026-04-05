@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calcul facture Sonelgaz en ligne | Calculateur électricité Algérie</title>
+<meta name="description" content="Calculez votre facture Sonelgaz en ligne gratuitement. Estimez votre consommation électrique en kWh et obtenez une estimation précise de votre facture d'électricité en Algérie.">
+<meta name="keywords" content="facture sonelgaz, calcul kwh algerie, prix electricite algerie, simulateur facture sonelgaz, consommation electricite algerie, tarif sonelgaz 2024">
+<meta name="author" content="Calculateur Sonelgaz">
+<meta property="og:title" content="Calcul facture Sonelgaz en ligne">
+<meta property="og:description" content="Estimez votre facture d'électricité Sonelgaz gratuitement avec notre calculateur en ligne.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+/* ========================================
+   CSS VARIABLES & RESET
+======================================== */
+:root {
+  --bg: #f0f4ff;
+  --surface: #ffffff;
+  --surface2: #f7f9ff;
+  --surface3: #eef2ff;
+  --border: #dde3f5;
+  --navy: #0d1b4b;
+  --blue: #1a3bac;
+  --blue-mid: #2555d4;
+  --blue-light: #4e7bf5;
+  --accent: #00c896;
+  --accent2: #ff6b35;
+  --warn: #f5a623;
+  --text: #0d1b4b;
+  --text-2: #4a5580;
+  --text-3: #8892b8;
+  --white: #ffffff;
+  --shadow-sm: 0 2px 12px rgba(13,27,75,0.06);
+  --shadow-md: 0 8px 32px rgba(13,27,75,0.10);
+  --shadow-lg: 0 20px 60px rgba(13,27,75,0.15);
+  --radius: 18px;
+  --radius-sm: 10px;
+  --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+
+  /* tier colors */
+  --t1: #4e7bf5;
+  --t2: #00c896;
+  --t3: #f5a623;
+  --t4: #e84545;
+}
+
+[data-theme="dark"] {
+  --bg: #070d24;
+  --surface: #0f1a3e;
+  --surface2: #131f4a;
+  --surface3: #192657;
+  --border: #1e2f68;
+  --text: #e8eeff;
+  --text-2: #8fa0d0;
+  --text-3: #4a5f9a;
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.25);
+  --shadow-md: 0 8px 32px rgba(0,0,0,0.35);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+[dir="rtl"] { font-family: 'DM Sans', 'Tahoma', sans-serif; }
+
+/* ========================================
+   BACKGROUND DECORATION
+======================================== */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.bg-orbs::before {
+  content: '';
+  position: absolute;
+  top: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(37,85,212,0.12) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: floatOrb 12s ease-in-out infinite;
+}
+.bg-orbs::after {
+  content: '';
+  position: absolute;
+  bottom: -150px; left: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(0,200,150,0.08) 0%, transparent 70%);
+  border-radius: 50%;
+  animation: floatOrb 15s ease-in-out infinite reverse;
+}
+@keyframes floatOrb {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50% { transform: translate(30px,-30px) scale(1.05); }
+}
+
+/* ========================================
+   LAYOUT
+======================================== */
+.app-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+/* ========================================
+   HEADER
+======================================== */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0 20px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 46px; height: 46px;
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-light));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 6px 20px rgba(37,85,212,0.35);
+  flex-shrink: 0;
+}
+
+.logo-text h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.2;
+}
+[data-theme="dark"] .logo-text h1 { color: var(--white); }
+
+.logo-text span {
+  font-size: 0.72rem;
+  color: var(--text-3);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Language Switcher */
+.lang-switcher {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 3px;
+  gap: 2px;
+  box-shadow: var(--shadow-sm);
+}
+.lang-btn {
+  padding: 5px 12px;
+  border-radius: 24px;
+  border: none;
+  background: transparent;
+  color: var(--text-3);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  letter-spacing: 0.03em;
+  font-family: inherit;
+}
+.lang-btn.active {
+  background: var(--blue-mid);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(37,85,212,0.35);
+}
+.lang-btn:hover:not(.active) { color: var(--text); }
+
+/* Dark mode */
+.theme-toggle {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
+}
+.theme-toggle:hover { background: var(--surface3); transform: scale(1.05); }
+
+/* ========================================
+   HERO
+======================================== */
+.hero {
+  text-align: center;
+  padding: 32px 0 28px;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  border-radius: 30px;
+  padding: 5px 14px;
+  font-size: 0.75rem;
+  color: var(--blue-mid);
+  font-weight: 600;
+  margin-bottom: 16px;
+  letter-spacing: 0.03em;
+}
+.hero h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--navy);
+  margin-bottom: 12px;
+}
+[data-theme="dark"] .hero h2 { color: var(--white); }
+.hero h2 .gradient-text {
+  background: linear-gradient(135deg, var(--blue-mid), var(--blue-light), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 1rem;
+  color: var(--text-2);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.65;
+}
+
+/* ========================================
+   MAIN GRID
+======================================== */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 28px;
+}
+@media (max-width: 768px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+
+/* ========================================
+   CARDS
+======================================== */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition), background var(--transition), border-color var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+.card-title .icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.icon-blue { background: rgba(37,85,212,0.12); }
+.icon-green { background: rgba(0,200,150,0.12); }
+.icon-orange { background: rgba(245,166,35,0.12); }
+
+/* ========================================
+   FORM ELEMENTS
+======================================== */
+.field-group {
+  margin-bottom: 18px;
+}
+.field-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-2);
+  margin-bottom: 7px;
+  letter-spacing: 0.02em;
+}
+.field-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface2);
+  color: var(--text);
+  font-size: 1rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 500;
+  transition: all var(--transition);
+  outline: none;
+  -webkit-appearance: none;
+}
+.field-input:focus {
+  border-color: var(--blue-mid);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(37,85,212,0.1);
+}
+.field-input.error { border-color: #e84545; box-shadow: 0 0 0 3px rgba(232,69,69,0.1); }
+.field-error { font-size: 0.73rem; color: #e84545; margin-top: 4px; display: none; }
+.field-error.show { display: block; }
+
+/* Period Toggle */
+.period-toggle {
+  display: flex;
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+  gap: 4px;
+}
+.period-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--text-2);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: inherit;
+  text-align: center;
+}
+.period-btn.active {
+  background: var(--blue-mid);
+  color: var(--white);
+  box-shadow: 0 3px 12px rgba(37,85,212,0.35);
+}
+
+/* ========================================
+   RESULT CARD (full-width)
+======================================== */
+.result-card {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--blue) 60%, #1e4fd4 100%);
+  border: none;
+  color: var(--white);
+  padding: 28px 28px 24px;
+  position: relative;
+  overflow: hidden;
+}
+.result-card::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 50%;
+}
+.result-card::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 40px;
+  width: 150px; height: 150px;
+  background: rgba(0,200,150,0.08);
+  border-radius: 50%;
+}
+
+.result-main {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+  position: relative; z-index: 1;
+}
+.result-amount {
+  display: flex;
+  flex-direction: column;
+}
+.result-label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.6);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+.result-value {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.4rem, 6vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: var(--white);
+  transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.result-currency {
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.7);
+  margin-left: 6px;
+}
+.result-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.result-meta-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 10px 16px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.12);
+  min-width: 110px;
+}
+.result-meta-item .lbl { font-size: 0.7rem; color: rgba(255,255,255,0.55); margin-bottom: 3px; }
+.result-meta-item .val { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--white); }
+
+/* ========================================
+   TIER BREAKDOWN
+======================================== */
+.tier-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tier-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+.tier-item.active { border-color: var(--blue-light); background: var(--surface3); }
+.tier-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.tier-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.tier-range {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-2);
+  flex: 1;
+}
+.tier-kwh {
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+.tier-cost {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.tier-bar-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.tier-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  width: 0%;
+}
+
+/* ========================================
+   APPLIANCE ESTIMATOR
+======================================== */
+.appliance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+@media (max-width: 400px) { .appliance-grid { grid-template-columns: 1fr; } }
+
+.appliance-card {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+.appliance-card.selected { border-color: var(--blue-light); background: var(--surface3); box-shadow: 0 0 0 3px rgba(37,85,212,0.08); }
+.appliance-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.appliance-emoji { font-size: 20px; }
+.appliance-info { flex: 1; }
+.appliance-name { font-size: 0.8rem; font-weight: 600; color: var(--text); line-height: 1.2; }
+.appliance-watt { font-size: 0.7rem; color: var(--text-3); }
+.appliance-toggle {
+  width: 20px; height: 20px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  color: var(--text-3);
+  transition: all var(--transition);
+  flex-shrink: 0;
+}
+.appliance-card.selected .appliance-toggle {
+  background: var(--blue-mid);
+  border-color: var(--blue-mid);
+  color: var(--white);
+}
+.hours-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hours-input {
+  flex: 1;
+  padding: 6px 9px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: inherit;
+  outline: none;
+  transition: all var(--transition);
+}
+.hours-input:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 2px rgba(37,85,212,0.1); }
+.hours-label { font-size: 0.7rem; color: var(--text-3); white-space: nowrap; }
+.appliance-kwh { font-size: 0.7rem; color: var(--accent); font-weight: 600; text-align: right; }
+
+.est-total-bar {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, rgba(37,85,212,0.08), rgba(0,200,150,0.05));
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.est-total-bar .lbl { font-size: 0.8rem; color: var(--text-2); font-weight: 500; }
+.est-total-bar .val { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--blue-mid); }
+
+.use-estimate-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  background: var(--blue-mid);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.use-estimate-btn:hover { background: #1e4fd4; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,85,212,0.35); }
+.use-estimate-btn:active { transform: translateY(0); }
+
+/* ========================================
+   TIPS
+======================================== */
+.tips-list { display: flex; flex-direction: column; gap: 10px; }
+.tip-item {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  align-items: flex-start;
+  transition: all var(--transition);
+  animation: fadeSlide 0.4s ease forwards;
+}
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.tip-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0,200,150,0.15), rgba(0,200,150,0.08));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.tip-text {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  line-height: 1.55;
+}
+.tip-text strong { color: var(--accent); font-weight: 600; }
+
+/* ========================================
+   CHART SECTION
+======================================== */
+.chart-container {
+  position: relative;
+  height: 200px;
+}
+
+/* ========================================
+   EMPTY STATE
+======================================== */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+  text-align: center;
+  color: var(--text-3);
+}
+.empty-state .icon-big { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+.empty-state p { font-size: 0.82rem; line-height: 1.6; }
+
+/* ========================================
+   PRICING TABLE MINI
+======================================== */
+.pricing-table { width: 100%; border-collapse: collapse; }
+.pricing-table th,
+.pricing-table td { padding: 8px 10px; font-size: 0.78rem; text-align: left; border-bottom: 1px solid var(--border); }
+[dir="rtl"] .pricing-table th,
+[dir="rtl"] .pricing-table td { text-align: right; }
+.pricing-table th { font-weight: 600; color: var(--text-3); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.pricing-table td { color: var(--text); }
+.pricing-table tr:last-child td { border-bottom: none; }
+.price-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 6px; vertical-align: middle; }
+
+/* ========================================
+   FOOTER
+======================================== */
+footer {
+  text-align: center;
+  padding: 28px 0 0;
+  color: var(--text-3);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+}
+footer a { color: var(--blue-light); text-decoration: none; }
+
+/* ========================================
+   UTILITY
+======================================== */
+.full-col { grid-column: 1 / -1; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.mt-8 { margin-top: 8px; }
+.mt-12 { margin-top: 12px; }
+.pulse {
+  animation: pulse 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+</style>
+</head>
+
+<body>
+<div class="bg-orbs" aria-hidden="true"></div>
+
+<div class="app-wrapper">
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo-area">
+      <div class="logo-icon" aria-hidden="true">⚡</div>
+      <div class="logo-text">
+        <h1 data-i18n="appName">Calculateur Sonelgaz</h1>
+        <span data-i18n="appSub">Estimation de facture électricité</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="lang-switcher" role="group" aria-label="Language selector">
+        <button class="lang-btn active" data-lang="fr">FR</button>
+        <button class="lang-btn" data-lang="ar">ع</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">⚡ <span data-i18n="badge">Tarifs Sonelgaz 2024</span></div>
+    <h2><span data-i18n="heroTitle">Calculez votre</span><br><span class="gradient-text" data-i18n="heroTitleGrad">facture Sonelgaz</span></h2>
+    <p data-i18n="heroSub">Estimez votre consommation en kWh et obtenez une simulation détaillée de votre prochaine facture d'électricité.</p>
+  </section>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- RESULT CARD (always first) -->
+    <div class="card result-card full-col" id="resultCard">
+      <div class="result-main">
+        <div class="result-amount">
+          <span class="result-label" data-i18n="totalBill">MONTANT ESTIMÉ</span>
+          <div>
+            <span class="result-value" id="totalDisplay">0</span>
+            <span class="result-currency">DA</span>
+          </div>
+        </div>
+        <div class="result-meta" id="resultMeta">
+          <div class="result-meta-item">
+            <div class="lbl" data-i18n="consumption">Consommation</div>
+            <div class="val" id="metaKwh">0 kWh</div>
+          </div>
+          <div class="result-meta-item">
+            <div class="lbl" data-i18n="period">Période</div>
+            <div class="val" id="metaPeriod">Bimestriel</div>
+          </div>
+          <div class="result-meta-item">
+            <div class="lbl" data-i18n="pricePerKwh">Prix moyen/kWh</div>
+            <div class="val" id="metaAvg">0 DA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALCULATOR INPUT -->
+    <div class="card">
+      <div class="card-title">
+        <div class="icon icon-blue">🧮</div>
+        <span data-i18n="calcTitle">Calculateur Direct</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" data-i18n="periodLabel">Période de facturation</label>
+        <div class="period-toggle">
+          <button class="period-btn" data-period="monthly" data-i18n="monthly">Mensuel</button>
+          <button class="period-btn active" data-period="bimonthly" data-i18n="bimonthly">Bimestriel</button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="kwhInput" data-i18n="kwhLabel">Consommation (kWh)</label>
+        <input type="number" id="kwhInput" class="field-input" placeholder="Ex: 350" min="0" max="10000" inputmode="decimal">
+        <div class="field-error" id="kwhError" data-i18n="kwhError">Veuillez entrer une valeur valide entre 0 et 10 000 kWh</div>
+      </div>
+
+      <!-- Tier breakdown -->
+      <div class="tier-list" id="tierList">
+        <!-- Dynamically filled -->
+        <div class="empty-state">
+          <div class="icon-big">📊</div>
+          <p data-i18n="emptyCalc">Entrez votre consommation pour voir la répartition par tranche.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING TABLE -->
+    <div class="card">
+      <div class="card-title">
+        <div class="icon icon-orange">💰</div>
+        <span data-i18n="tarifTitle">Grille Tarifaire</span>
+      </div>
+
+      <table class="pricing-table" aria-label="Grille tarifaire Sonelgaz">
+        <thead>
+          <tr>
+            <th data-i18n="tableRange">Tranche</th>
+            <th data-i18n="tablePrice">Prix/kWh</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="price-dot" style="background:var(--t1)"></span><span data-i18n="tr1">0 – 125 kWh</span></td>
+            <td><strong>4,00 DA</strong></td>
+          </tr>
+          <tr>
+            <td><span class="price-dot" style="background:var(--t2)"></span><span data-i18n="tr2">126 – 250 kWh</span></td>
+            <td><strong>4,70 DA</strong></td>
+          </tr>
+          <tr>
+            <td><span class="price-dot" style="background:var(--t3)"></span><span data-i18n="tr3">251 – 500 kWh</span></td>
+            <td><strong>5,50 DA</strong></td>
+          </tr>
+          <tr>
+            <td><span class="price-dot" style="background:var(--t4)"></span><span data-i18n="tr4">500+ kWh</span></td>
+            <td><strong>6,70 DA</strong></td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding-top:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:0.75rem;color:var(--text-3)" data-i18n="fixedFees">Frais fixes</span>
+                <strong style="font-size:0.82rem">≈ 200 DA</strong>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Chart -->
+      <div style="margin-top:20px;">
+        <div style="font-size:0.8rem;font-weight:600;color:var(--text-2);margin-bottom:10px;" data-i18n="chartTitle">Répartition par tranche</div>
+        <div class="chart-container">
+          <canvas id="tierChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPLIANCE ESTIMATOR -->
+    <div class="card full-col">
+      <div class="card-title">
+        <div class="icon icon-green">🔌</div>
+        <span data-i18n="applianceTitle">Estimateur par Appareils</span>
+      </div>
+
+      <div class="appliance-grid" id="applianceGrid">
+        <!-- Filled by JS -->
+      </div>
+
+      <div class="est-total-bar">
+        <span class="lbl" data-i18n="estimatedConsumption">Consommation estimée</span>
+        <span class="val" id="appEstKwh">0 kWh</span>
+      </div>
+      <button class="use-estimate-btn" id="useEstimateBtn">
+        ↑ <span data-i18n="useEstimate">Utiliser cette estimation</span>
+      </button>
+    </div>
+
+    <!-- ENERGY TIPS -->
+    <div class="card full-col">
+      <div class="card-title">
+        <div class="icon icon-green">💡</div>
+        <span data-i18n="tipsTitle">Conseils d'Économie</span>
+      </div>
+      <div class="tips-list" id="tipsList">
+        <div class="empty-state">
+          <div class="icon-big">🌱</div>
+          <p data-i18n="emptyTips">Calculez votre facture pour recevoir des conseils personnalisés.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-grid -->
+
+  <footer>
+    <p data-i18n="footerNote">⚠️ Cette estimation est indicative et basée sur les tarifs Sonelgaz publics. Les frais réels peuvent inclure des taxes et redevances supplémentaires.</p>
+    <p style="margin-top:6px;"><span data-i18n="footerKeywords">facture sonelgaz · calcul kwh algerie · prix electricite algerie</span></p>
+  </footer>
+
+</div><!-- /app-wrapper -->
+
+<script>
+/* ================================================
+   TRANSLATIONS
+================================================ */
+const i18n = {
+  fr: {
+    appName: "Calculateur Sonelgaz",
+    appSub: "Estimation de facture électricité",
+    badge: "Tarifs Sonelgaz 2024",
+    heroTitle: "Calculez votre",
+    heroTitleGrad: "facture Sonelgaz",
+    heroSub: "Estimez votre consommation en kWh et obtenez une simulation détaillée de votre prochaine facture d'électricité.",
+    totalBill: "MONTANT ESTIMÉ",
+    consumption: "Consommation",
+    period: "Période",
+    pricePerKwh: "Prix moyen/kWh",
+    calcTitle: "Calculateur Direct",
+    periodLabel: "Période de facturation",
+    monthly: "Mensuel",
+    bimonthly: "Bimestriel",
+    kwhLabel: "Consommation (kWh)",
+    kwhError: "Veuillez entrer une valeur valide entre 0 et 10 000 kWh",
+    emptyCalc: "Entrez votre consommation pour voir la répartition par tranche.",
+    tarifTitle: "Grille Tarifaire",
+    tableRange: "Tranche",
+    tablePrice: "Prix/kWh",
+    tr1: "0 – 125 kWh", tr2: "126 – 250 kWh", tr3: "251 – 500 kWh", tr4: "500+ kWh",
+    fixedFees: "Frais fixes",
+    chartTitle: "Répartition par tranche",
+    applianceTitle: "Estimateur par Appareils",
+    estimatedConsumption: "Consommation estimée",
+    useEstimate: "Utiliser cette estimation",
+    tipsTitle: "Conseils d'Économie",
+    emptyTips: "Calculez votre facture pour recevoir des conseils personnalisés.",
+    footerNote: "⚠️ Cette estimation est indicative et basée sur les tarifs Sonelgaz publics. Les frais réels peuvent inclure des taxes et redevances supplémentaires.",
+    footerKeywords: "facture sonelgaz · calcul kwh algerie · prix electricite algerie",
+    periodMonthly: "Mensuel",
+    periodBimonthly: "Bimestriel",
+    tierLabel: "Tranche",
+    tierKwh: "kWh",
+    tierRate: "DA/kWh",
+    fixedLabel: "Frais fixes",
+  },
+  ar: {
+    appName: "حاسبة سونلغاز",
+    appSub: "تقدير فاتورة الكهرباء",
+    badge: "تعريفة سونلغاز 2024",
+    heroTitle: "احسب",
+    heroTitleGrad: "فاتورة سونلغاز",
+    heroSub: "قدّر استهلاكك بالكيلوواط ساعة واحصل على تقدير تفصيلي لفاتورة الكهرباء القادمة.",
+    totalBill: "المبلغ المقدر",
+    consumption: "الاستهلاك",
+    period: "الفترة",
+    pricePerKwh: "متوسط السعر/كوات",
+    calcTitle: "الحاسبة المباشرة",
+    periodLabel: "فترة الفوترة",
+    monthly: "شهري",
+    bimonthly: "ثنائي الشهر",
+    kwhLabel: "الاستهلاك (كيلوواط ساعة)",
+    kwhError: "يرجى إدخال قيمة صحيحة بين 0 و 10,000 كيلوواط",
+    emptyCalc: "أدخل استهلاكك لرؤية التوزيع حسب الشريحة.",
+    tarifTitle: "جدول الأسعار",
+    tableRange: "الشريحة",
+    tablePrice: "السعر/كوات",
+    tr1: "0 – 125 كوات", tr2: "126 – 250 كوات", tr3: "251 – 500 كوات", tr4: "500+ كوات",
+    fixedFees: "الرسوم الثابتة",
+    chartTitle: "التوزيع حسب الشريحة",
+    applianceTitle: "تقدير حسب الأجهزة",
+    estimatedConsumption: "الاستهلاك المقدر",
+    useEstimate: "استخدام هذا التقدير",
+    tipsTitle: "نصائح لتوفير الطاقة",
+    emptyTips: "احسب فاتورتك للحصول على نصائح مخصصة.",
+    footerNote: "⚠️ هذا التقدير استشاري ومبني على تعريفات سونلغاز المعلنة. قد تشمل الفاتورة الفعلية رسومًا إضافية.",
+    footerKeywords: "فاتورة سونلغاز · حساب كيلوواط الجزائر · أسعار الكهرباء الجزائر",
+    periodMonthly: "شهري",
+    periodBimonthly: "ثنائي الشهر",
+    tierLabel: "الشريحة",
+    tierKwh: "كوات",
+    tierRate: "دج/كوات",
+    fixedLabel: "رسوم ثابتة",
+  },
+  en: {
+    appName: "Sonelgaz Calculator",
+    appSub: "Electricity bill estimator",
+    badge: "Sonelgaz Rates 2024",
+    heroTitle: "Calculate your",
+    heroTitleGrad: "Sonelgaz bill",
+    heroSub: "Estimate your kWh consumption and get a detailed simulation of your next electricity bill in Algeria.",
+    totalBill: "ESTIMATED AMOUNT",
+    consumption: "Consumption",
+    period: "Period",
+    pricePerKwh: "Avg. price/kWh",
+    calcTitle: "Direct Calculator",
+    periodLabel: "Billing period",
+    monthly: "Monthly",
+    bimonthly: "Bi-monthly",
+    kwhLabel: "Consumption (kWh)",
+    kwhError: "Please enter a valid value between 0 and 10,000 kWh",
+    emptyCalc: "Enter your consumption to see the tier breakdown.",
+    tarifTitle: "Pricing Grid",
+    tableRange: "Tier",
+    tablePrice: "Price/kWh",
+    tr1: "0 – 125 kWh", tr2: "126 – 250 kWh", tr3: "251 – 500 kWh", tr4: "500+ kWh",
+    fixedFees: "Fixed fees",
+    chartTitle: "Distribution by tier",
+    applianceTitle: "Appliance Estimator",
+    estimatedConsumption: "Estimated consumption",
+    useEstimate: "Use this estimate",
+    tipsTitle: "Energy Saving Tips",
+    emptyTips: "Calculate your bill to receive personalized tips.",
+    footerNote: "⚠️ This estimate is indicative and based on public Sonelgaz rates. Actual fees may include additional taxes.",
+    footerKeywords: "sonelgaz bill · kwh calculation algeria · electricity price algeria",
+    periodMonthly: "Monthly",
+    periodBimonthly: "Bi-monthly",
+    tierLabel: "Tier",
+    tierKwh: "kWh",
+    tierRate: "DA/kWh",
+    fixedLabel: "Fixed fees",
+  }
+};
+
+/* ================================================
+   APPLIANCES DATA
+================================================ */
+const appliancesData = [
+  { id: 'ac', emoji: '❄️', nameFr: 'Climatiseur', nameAr: 'مكيف هواء', nameEn: 'Air Conditioner', watts: 1500 },
+  { id: 'fridge', emoji: '🧊', nameFr: 'Réfrigérateur', nameAr: 'ثلاجة', nameEn: 'Refrigerator', watts: 150 },
+  { id: 'tv', emoji: '📺', nameFr: 'Télévision', nameAr: 'تلفزيون', nameEn: 'Television', watts: 120 },
+  { id: 'washer', emoji: '🫧', nameFr: 'Machine à laver', nameAr: 'غسالة', nameEn: 'Washing Machine', watts: 1800 },
+  { id: 'lighting', emoji: '💡', nameFr: 'Éclairage', nameAr: 'إضاءة', nameEn: 'Lighting (x5)', watts: 60 },
+  { id: 'water_heater', emoji: '🚿', nameFr: 'Chauffe-eau', nameAr: 'سخان مياه', nameEn: 'Water Heater', watts: 2000 },
+  { id: 'computer', emoji: '💻', nameFr: 'Ordinateur', nameAr: 'حاسوب', nameEn: 'Computer', watts: 200 },
+  { id: 'microwave', emoji: '📡', nameFr: 'Micro-ondes', nameAr: 'ميكروويف', nameEn: 'Microwave', watts: 900 },
+];
+
+/* ================================================
+   TIPS DATA
+================================================ */
+const tipsData = {
+  fr: [
+    { condition: kwh => kwh > 200, icon: '❄️', fn: (kwh) => `Réduire l'utilisation de la climatisation de 2h/jour peut économiser <strong>~${Math.round(kwh*0.12)} DA/bimestre</strong>.` },
+    { condition: kwh => kwh > 100, icon: '💡', fn: () => `Remplacer les ampoules par des LED peut réduire votre facture de <strong>~8-12%</strong>.` },
+    { condition: kwh => kwh > 300, icon: '🌡️', fn: (kwh) => `Régler votre climatiseur à 24°C au lieu de 20°C économise <strong>~${Math.round(kwh*0.08)} DA</strong>.` },
+    { condition: kwh => kwh > 150, icon: '🫧', fn: () => `Laver votre linge en cycle froid réduit la consommation de la machine à laver de <strong>50%</strong>.` },
+    { condition: kwh => kwh > 500, icon: '⚡', fn: (kwh) => `Votre consommation est élevée (Tranche 4). Une réduction de 20% économiserait <strong>~${Math.round(kwh * 0.2 * 6.7)} DA</strong>.` },
+    { condition: () => true, icon: '🔌', fn: () => `Débrancher les appareils en veille peut économiser jusqu'à <strong>10% de votre facture</strong>.` },
+  ],
+  ar: [
+    { condition: kwh => kwh > 200, icon: '❄️', fn: (kwh) => `تقليل استخدام التكييف بساعتين يوميًا يوفر <strong>~${Math.round(kwh*0.12)} دج</strong>.` },
+    { condition: kwh => kwh > 100, icon: '💡', fn: () => `استبدال المصابيح بـ LED يقلل فاتورتك بنسبة <strong>8-12%</strong>.` },
+    { condition: kwh => kwh > 300, icon: '🌡️', fn: (kwh) => `ضبط التكييف على 24 درجة بدلاً من 20 يوفر <strong>~${Math.round(kwh*0.08)} دج</strong>.` },
+    { condition: kwh => kwh > 150, icon: '🫧', fn: () => `الغسيل بالماء البارد يقلل استهلاك الغسالة بنسبة <strong>50%</strong>.` },
+    { condition: kwh => kwh > 500, icon: '⚡', fn: (kwh) => `استهلاكك مرتفع. تخفيض 20% يوفر <strong>~${Math.round(kwh * 0.2 * 6.7)} دج</strong>.` },
+    { condition: () => true, icon: '🔌', fn: () => `فصل الأجهزة عن التيار عند عدم الاستخدام يوفر <strong>10%</strong> من الفاتورة.` },
+  ],
+  en: [
+    { condition: kwh => kwh > 200, icon: '❄️', fn: (kwh) => `Reducing AC use by 2hrs/day can save <strong>~${Math.round(kwh*0.12)} DA/bi-month</strong>.` },
+    { condition: kwh => kwh > 100, icon: '💡', fn: () => `Switching to LED bulbs can reduce your bill by <strong>~8-12%</strong>.` },
+    { condition: kwh => kwh > 300, icon: '🌡️', fn: (kwh) => `Setting AC to 24°C instead of 20°C saves <strong>~${Math.round(kwh*0.08)} DA</strong>.` },
+    { condition: kwh => kwh > 150, icon: '🫧', fn: () => `Using cold water for laundry reduces washing machine consumption by <strong>50%</strong>.` },
+    { condition: kwh => kwh > 500, icon: '⚡', fn: (kwh) => `High consumption detected. A 20% reduction saves <strong>~${Math.round(kwh * 0.2 * 6.7)} DA</strong>.` },
+    { condition: () => true, icon: '🔌', fn: () => `Unplugging standby devices can save up to <strong>10% of your bill</strong>.` },
+  ]
+};
+
+/* ================================================
+   STATE
+================================================ */
+let state = {
+  lang: 'fr',
+  theme: 'light',
+  period: 'bimonthly',
+  kwh: 0,
+  total: 0,
+};
+
+/* ================================================
+   TIER CALCULATION
+================================================ */
+const TIERS = [
+  { min: 0,   max: 125,  rate: 4.0,  color: 'var(--t1)', label: '0–125' },
+  { min: 126, max: 250,  rate: 4.7,  color: 'var(--t2)', label: '126–250' },
+  { min: 251, max: 500,  rate: 5.5,  color: 'var(--t3)', label: '251–500' },
+  { min: 501, max: Infinity, rate: 6.7, color: 'var(--t4)', label: '500+' },
+];
+const FIXED_FEES = 200;
+
+function calcBill(kwh) {
+  if (!kwh || kwh <= 0) return { tiers: [], total: 0, fixedFees: 0 };
+  let remaining = kwh;
+  let total = FIXED_FEES;
+  const tierResults = TIERS.map(t => {
+    const capacity = t.max === Infinity ? Infinity : (t.max - t.min + 1);
+    const used = Math.max(0, Math.min(remaining, capacity));
+    remaining -= used;
+    const cost = used * t.rate;
+    total += cost;
+    return { ...t, used, cost };
+  });
+  return { tiers: tierResults, total, fixedFees: FIXED_FEES };
+}
+
+/* ================================================
+   RENDER RESULT
+================================================ */
+let tierChart = null;
+
+function renderResult(kwh) {
+  const result = calcBill(kwh);
+  state.total = result.total;
+  state.kwh = kwh;
+
+  // Animate total
+  animateValue('totalDisplay', result.total);
+
+  // Meta
+  document.getElementById('metaKwh').textContent = kwh + ' kWh';
+  const t = i18n[state.lang];
+  document.getElementById('metaPeriod').textContent = state.period === 'monthly' ? t.periodMonthly : t.periodBimonthly;
+  const avg = kwh > 0 ? (result.total / kwh).toFixed(2) : '0';
+  document.getElementById('metaAvg').textContent = avg + ' DA';
+
+  renderTiers(result, kwh);
+  renderChart(result);
+  renderTips(kwh);
+  saveToStorage();
+}
+
+function animateValue(id, target) {
+  const el = document.getElementById(id);
+  el.classList.remove('pulse');
+  void el.offsetWidth;
+  el.classList.add('pulse');
+  const start = parseFloat(el.textContent.replace(/,/g, '')) || 0;
+  const duration = 600;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + (target - start) * eased;
+    el.textContent = formatNum(current);
+    if (progress < 1) requestAnimationFrame(update);
+    else el.textContent = formatNum(target);
+  }
+  requestAnimationFrame(update);
+}
+
+function formatNum(n) {
+  return Math.round(n).toLocaleString('fr-DZ');
+}
+
+function renderTiers(result, totalKwh) {
+  const container = document.getElementById('tierList');
+  const t = i18n[state.lang];
+  if (!totalKwh || totalKwh <= 0) {
+    container.innerHTML = `<div class="empty-state"><div class="icon-big">📊</div><p>${t.emptyCalc}</p></div>`;
+    return;
+  }
+  container.innerHTML = result.tiers.map(tier => {
+    if (tier.used === 0) return '';
+    const pct = Math.min((tier.used / totalKwh) * 100, 100);
+    return `
+      <div class="tier-item active">
+        <div class="tier-row">
+          <div class="tier-dot" style="background:${tier.color}"></div>
+          <span class="tier-range">${tier.label} kWh × ${tier.rate} DA</span>
+          <span class="tier-kwh">${tier.used} ${t.tierKwh}</span>
+          <span class="tier-cost">${formatNum(tier.cost)} DA</span>
+        </div>
+        <div class="tier-bar-track">
+          <div class="tier-bar-fill" style="background:${tier.color};width:0%" data-target="${pct}"></div>
+        </div>
+      </div>`;
+  }).join('') + `
+    <div class="tier-item" style="border-color:var(--border)">
+      <div class="tier-row">
+        <div class="tier-dot" style="background:var(--text-3)"></div>
+        <span class="tier-range">${t.fixedLabel}</span>
+        <span class="tier-cost">${FIXED_FEES} DA</span>
+      </div>
+    </div>`;
+
+  // Animate bars
+  setTimeout(() => {
+    container.querySelectorAll('.tier-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  }, 50);
+}
+
+function renderChart(result) {
+  const ctx = document.getElementById('tierChart').getContext('2d');
+  const labels = TIERS.map(t => t.label + ' kWh');
+  const data = result.tiers.map(t => Math.round(t.cost));
+  const colors = TIERS.map(t => t.color.replace('var(', '').replace(')', ''));
+  const resolvedColors = ['#4e7bf5', '#00c896', '#f5a623', '#e84545'];
+
+  if (tierChart) { tierChart.destroy(); }
+
+  const isDark = state.theme === 'dark';
+  const textColor = isDark ? '#8fa0d0' : '#4a5580';
+  const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(13,27,75,0.06)';
+
+  tierChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: data.some(d => d > 0) ? data : [1,1,1,1],
+        backgroundColor: resolvedColors.map(c => c + 'cc'),
+        borderColor: resolvedColors,
+        borderWidth: 2,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '65%',
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            font: { family: 'DM Sans', size: 11 },
+            color: textColor,
+            boxWidth: 12,
+            padding: 10,
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${formatNum(ctx.raw)} DA`
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderTips(kwh) {
+  const container = document.getElementById('tipsList');
+  const t = i18n[state.lang];
+  if (!kwh || kwh <= 0) {
+    container.innerHTML = `<div class="empty-state"><div class="icon-big">🌱</div><p>${t.emptyTips}</p></div>`;
+    return;
+  }
+  const tips = tipsData[state.lang].filter(tip => tip.condition(kwh));
+  container.innerHTML = tips.map((tip, i) => `
+    <div class="tip-item" style="animation-delay:${i*0.07}s">
+      <div class="tip-icon">${tip.icon}</div>
+      <p class="tip-text">${tip.fn(kwh)}</p>
+    </div>`).join('');
+}
+
+/* ================================================
+   APPLIANCE ESTIMATOR
+================================================ */
+function buildApplianceGrid() {
+  const grid = document.getElementById('applianceGrid');
+  const t = i18n[state.lang];
+  grid.innerHTML = appliancesData.map(a => {
+    const name = state.lang === 'ar' ? a.nameAr : (state.lang === 'en' ? a.nameEn : a.nameFr);
+    return `
+      <div class="appliance-card" data-id="${a.id}" onclick="toggleAppliance('${a.id}')">
+        <div class="appliance-header">
+          <span class="appliance-emoji">${a.emoji}</span>
+          <div class="appliance-info">
+            <div class="appliance-name">${name}</div>
+            <div class="appliance-watt">${a.watts} W</div>
+          </div>
+          <div class="appliance-toggle" id="toggle_${a.id}">✓</div>
+        </div>
+        <div class="hours-row">
+          <input type="number" class="hours-input" id="hours_${a.id}" value="${a.id === 'fridge' ? 24 : (a.id === 'ac' ? 8 : 4)}"
+            min="0" max="24" inputmode="decimal"
+            onclick="event.stopPropagation()"
+            oninput="updateApplianceKwh()">
+          <span class="hours-label">h/jour</span>
+        </div>
+        <div class="appliance-kwh" id="kwh_${a.id}">0 kWh</div>
+      </div>`;
+  }).join('');
+
+  // default: fridge & lighting selected
+  ['fridge', 'lighting', 'tv'].forEach(id => {
+    document.querySelector(`[data-id="${id}"]`)?.classList.add('selected');
+  });
+  updateApplianceKwh();
+}
+
+function toggleAppliance(id) {
+  const card = document.querySelector(`[data-id="${id}"]`);
+  card.classList.toggle('selected');
+  updateApplianceKwh();
+}
+
+function updateApplianceKwh() {
+  let totalKwh = 0;
+  appliancesData.forEach(a => {
+    const card = document.querySelector(`[data-id="${a.id}"]`);
+    const hoursEl = document.getElementById('hours_' + a.id);
+    const kwhEl = document.getElementById('kwh_' + a.id);
+    if (!card || !hoursEl || !kwhEl) return;
+    const hours = parseFloat(hoursEl.value) || 0;
+    const daysPerPeriod = state.period === 'monthly' ? 30 : 60;
+    const kwh = (a.watts / 1000) * hours * daysPerPeriod;
+    kwhEl.textContent = kwh.toFixed(1) + ' kWh';
+    if (card.classList.contains('selected')) totalKwh += kwh;
+  });
+  document.getElementById('appEstKwh').textContent = totalKwh.toFixed(1) + ' kWh';
+  document.getElementById('appEstKwh')._value = totalKwh;
+}
+
+document.getElementById('useEstimateBtn').addEventListener('click', () => {
+  const val = document.getElementById('appEstKwh')._value || 0;
+  const kwhInput = document.getElementById('kwhInput');
+  kwhInput.value = Math.round(val);
+  kwhInput.dispatchEvent(new Event('input'));
+  kwhInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  kwhInput.focus();
+});
+
+/* ================================================
+   MAIN INPUT HANDLER
+================================================ */
+const kwhInput = document.getElementById('kwhInput');
+kwhInput.addEventListener('input', () => {
+  const val = parseFloat(kwhInput.value);
+  const errEl = document.getElementById('kwhError');
+  if (kwhInput.value === '' || (val >= 0 && val <= 10000)) {
+    kwhInput.classList.remove('error');
+    errEl.classList.remove('show');
+    renderResult(val || 0);
+  } else {
+    kwhInput.classList.add('error');
+    errEl.classList.add('show');
+  }
+});
+
+/* Period toggle */
+document.querySelectorAll('.period-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.period = btn.dataset.period;
+    updateApplianceKwh();
+    const val = parseFloat(kwhInput.value) || 0;
+    renderResult(val);
+  });
+});
+
+/* ================================================
+   LANGUAGE SWITCHER
+================================================ */
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.lang = btn.dataset.lang;
+    applyLang();
+  });
+});
+
+function applyLang() {
+  const t = i18n[state.lang];
+  const isRtl = state.lang === 'ar';
+  document.documentElement.lang = state.lang;
+  document.documentElement.dir = isRtl ? 'rtl' : 'ltr';
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key]) el.textContent = t[key];
+  });
+
+  buildApplianceGrid();
+
+  const val = parseFloat(kwhInput.value) || 0;
+  renderResult(val);
+}
+
+/* ================================================
+   DARK MODE
+================================================ */
+document.getElementById('themeToggle').addEventListener('click', () => {
+  state.theme = state.theme === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.getElementById('themeToggle').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  const val = parseFloat(kwhInput.value) || 0;
+  renderResult(val);
+});
+
+/* ================================================
+   LOCALSTORAGE
+================================================ */
+function saveToStorage() {
+  try {
+    localStorage.setItem('sonelgaz_last', JSON.stringify({
+      kwh: state.kwh,
+      total: state.total,
+      period: state.period,
+      lang: state.lang,
+      theme: state.theme,
+    }));
+  } catch(e) {}
+}
+
+function loadFromStorage() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('sonelgaz_last') || 'null');
+    if (!saved) return;
+    if (saved.lang) { state.lang = saved.lang; }
+    if (saved.theme) {
+      state.theme = saved.theme;
+      document.documentElement.setAttribute('data-theme', state.theme);
+      document.getElementById('themeToggle').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+    }
+    if (saved.period) {
+      state.period = saved.period;
+      document.querySelectorAll('.period-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.period === saved.period);
+      });
+    }
+    if (saved.kwh > 0) {
+      kwhInput.value = saved.kwh;
+      setTimeout(() => renderResult(saved.kwh), 100);
+    }
+    if (saved.lang) {
+      document.querySelectorAll('.lang-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.lang === saved.lang);
+      });
+    }
+  } catch(e) {}
+}
+
+/* ================================================
+   INIT
+================================================ */
+function init() {
+  buildApplianceGrid();
+  renderChart(calcBill(0));
+  loadFromStorage();
+  applyLang();
+}
+
+init();
+</script>
+</body>
+</html>
